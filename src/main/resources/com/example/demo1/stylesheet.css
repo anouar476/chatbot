@@ -1,0 +1,238 @@
+/* Root Pane Styling */
+.root-pane {
+    -fx-background-color: linear-gradient(to bottom right, #e3f2fd, #bbdefb);
+}
+
+/* Main BorderPane */
+.main-border-pane {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    -fx-background-color: #1565c0;
+    -fx-background-radius: 10 0 0 10;
+    -fx-padding: 20;
+}
+
+.sidebar-button {
+    -fx-background-color: #90caf9;
+    -fx-background-radius: 5;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 10;
+    -fx-font-size: 14px;
+}
+
+.profile-button {
+    -fx-background-color: #64b5f6;
+    -fx-background-radius: 5;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-padding: 8 15;
+}
+.center-content {
+    -fx-alignment: center;
+}
+
+.welcome-text {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-fill: #333;
+}
+.user-card {
+    -fx-background-color: #ffffff;
+    -fx-border-radius: 10;
+    -fx-border-color: #ddd;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0.5, 2, 2);
+    -fx-padding: 20;
+    -fx-margin: 10;
+}
+
+.user-card-content {
+    -fx-alignment: center;
+}
+
+.card-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+.card-data {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0078d4;
+}
+
+.section-header {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-fill: #555;
+}
+
+.data-label {
+    -fx-font-size: 16px;
+    -fx-padding: 10;
+}
+
+/* Footer Styling */
+.footer {
+    -fx-background-color: #1565c0;
+    -fx-background-radius: 0 0 10 10;
+}
+
+.footer-label {
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+}
+.root-pane {
+    -fx-background-color: #f8f9fa;
+    -fx-font-family: "Arial";
+}
+
+.main-border-pane {
+    -fx-background-color: #ffffff;
+}
+
+.sidebar {
+    -fx-background-color: #343a40;
+    -fx-padding: 20;
+    -fx-spacing: 15;
+}
+
+.sidebar-button {
+    -fx-background-color: #495057;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-padding: 10;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.sidebar-button:hover {
+    -fx-background-color: #6c757d;
+}
+
+.profile-button {
+    -fx-background-color: #17a2b8;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+}
+
+.logout-button {
+    -fx-background-color: #dc3545;
+    -fx-text-fill: #ffffff;
+}
+
+.content-pane {
+    -fx-background-color: #ffffff;
+    -fx-padding: 20;
+    -fx-spacing: 30;
+}
+
+.chart {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #dee2e6;
+    -fx-border-radius: 5;
+    -fx-padding: 10;
+}
+
+.section-header {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #343a40;
+}
+/* General Styles */
+.root {
+    -fx-font-family: "Arial", sans-serif;
+}
+
+/* Menu Bar */
+.menu-bar {
+    -fx-background-color: #0056b3;
+    -fx-border-radius: 10;
+    -fx-font-size: 14px;
+}
+
+.menu-item {
+    -fx-text-fill: white;
+}
+
+/* Header */
+.hbox {
+    -fx-background-color: #0056b3;
+    -fx-padding: 10;
+}
+
+.text {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-fill: white;
+}
+
+/* Chat Area */
+.text-area {
+    -fx-background-color: #f9f9f9;
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-font-family: Arial;
+    -fx-border-radius: 10;
+    -fx-border-color: #0056b3;
+    -fx-border-width: 2;
+    -fx-padding: 10px;
+}
+
+/* Input Area */
+.text-area {
+    -fx-background-color: #e9ecef;
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-border-radius: 5px;
+}
+
+.button {
+    -fx-background-color: #0056b3;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-border-radius: 5px;
+}
+
+/* Button Hover */
+.button:hover {
+    -fx-background-color: #004080;
+    -fx-transition: all 0.3s ease-in-out;
+}
+
+/* Fade Transition for TextArea */
+.text-area {
+    -fx-opacity: 0;
+    -fx-transition: opacity 1s ease-in-out;
+}
+
+.text-area:focused {
+    -fx-opacity: 1;
+}
+
+.connections-list {
+    -fx-background-color: #e9ecef;
+    -fx-padding: 10;
+    -fx-border-color: #dee2e6;
+    -fx-border-radius: 5;
+}
+
+.footer {
+    -fx-background-color: #343a40;
+    -fx-padding: 10;
+}
+
+.footer-label {
+    -fx-text-fill: #ffffff;
+}
+
+.dashboard {
+}
