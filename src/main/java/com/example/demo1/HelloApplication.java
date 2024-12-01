@@ -18,10 +18,12 @@ public class HelloApplication extends Application {
             throw new RuntimeException(e);
         }
         // Load the login form
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/demo1/login.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/demo1/dashboard.fxml"));
         Scene scene = new Scene(fxmlLoader.load(),1300,700);
         stage.setTitle("Login Form");
         stage.setScene(scene);
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("stylesheet.css")).toExternalForm());
+
         stage.show();
 
         // Add shutdown hook to close database connection
