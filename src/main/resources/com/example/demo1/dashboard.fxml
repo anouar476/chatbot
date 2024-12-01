@@ -40,7 +40,7 @@
                   style="-fx-background-color: #e9ecef; -fx-text-fill: black; -fx-font-size: 14px; -fx-border-radius: 5px;" />
         <Button fx:id="sendButton" onAction="#handleSendMessage"
                 style="-fx-background-color: #0056b3; -fx-text-fill: white; -fx-font-size: 14px; -fx-border-radius: 5px;"
-                text="Send"/>
+                text="rr"/>
     </HBox>
 
     <!-- History Section -->
