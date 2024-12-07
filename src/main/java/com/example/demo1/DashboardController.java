@@ -73,10 +73,6 @@ public class DashboardController {
 
     @FXML
     private void startNewChat() {
-        // Save the current conversation's first message to the history
-        saveFirstUserMessageToHistory();
-
-        // Clear the message history view and reset the input
         messagesView.getItems().clear();
         messageInput.clear();
     }
@@ -84,7 +80,7 @@ public class DashboardController {
     private void saveFirstUserMessageToHistory() {
         if (!messagesView.getItems().isEmpty()) {
             // Only save the first message sent by the user to the chat history
-            String firstMessage = messagesView.getItems().get(0).substring(4); // Remove the "You: " prefix
+            String firstMessage = messagesView.getItems().getFirst().substring(4); // Remove the "You: " prefix
             chatHistoryList.getItems().add(firstMessage);
         }
     }
@@ -123,7 +119,6 @@ public class DashboardController {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    assert response.body() != null;
                     String responseBody = response.body().string();
                     String aiResponse = extractAIResponse(responseBody);
                     Platform.runLater(() -> messagesView.getItems().add("AI: " + aiResponse));
@@ -141,18 +136,11 @@ public class DashboardController {
         return firstChoice.getAsJsonObject("message").get("content").getAsString().trim();
     }
 
-    @FXML
-    private void toggleHistoryVisibility() {
-        isHistoryVisible = !isHistoryVisible;
+    public boolean isHistoryVisible() {
+        return isHistoryVisible;
+    }
 
-        Platform.runLater(() -> {
-            if (isHistoryVisible) {
-                chatHistoryList.setVisible(true);
-                leftSidebar.setPrefWidth(250);  // Set the original width of the sidebar
-            } else {
-                chatHistoryList.setVisible(false);
-                leftSidebar.setPrefWidth(50);   // Shrink the sidebar width when history is hidden
-            }
-        });
+    public void setHistoryVisible(boolean historyVisible) {
+        isHistoryVisible = historyVisible;
     }
 }
