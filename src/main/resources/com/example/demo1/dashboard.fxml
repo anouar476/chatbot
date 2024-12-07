@@ -10,16 +10,14 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="root1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400" minWidth="600" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo1.DashboardController">
+<BorderPane fx:id="root1" maxHeight="700" maxWidth="1300" minHeight="700" minWidth="1300" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo1.DashboardController">
+    <!-- Top menu -->
     <top>
         <MenuBar styleClass="menu-bar">
             <Menu text="File">
-                <MenuItem text="New Chat" />
-                <MenuItem text="Save Chat" />
                 <MenuItem text="Close" />
             </Menu>
             <Menu text="Edit">
-                <MenuItem text="Clear History" />
                 <MenuItem text="Preferences" />
             </Menu>
             <Menu text="Help">
@@ -29,19 +27,21 @@
         </MenuBar>
     </top>
 
+    <!-- Left sidebar -->
     <left>
         <VBox fx:id="leftSidebar" minWidth="250" spacing="10" styleClass="sidebar">
-         <Button mnemonicParsing="false" text="new chat" />
+            <Button fx:id="newChatButton" mnemonicParsing="false" text="New Chat" onAction="#startNewChat" styleClass="new-chat-button"/>
             <ListView fx:id="chatHistoryList" styleClass="history-list" VBox.vgrow="ALWAYS" />
         </VBox>
     </left>
 
+    <!-- Chat area -->
     <center>
         <VBox spacing="10" styleClass="chat-area">
             <ListView fx:id="messagesView" styleClass="messages-list" VBox.vgrow="ALWAYS" />
 
             <HBox spacing="10" styleClass="message-input-box">
-                <TextArea fx:id="messageInput" prefHeight="6.0" prefWidth="501.0" promptText="Type your message here..." wrapText="true" HBox.hgrow="ALWAYS" />
+                <TextArea fx:id="messageInput" prefHeight="80" prefWidth="500" promptText="Type your message here..." wrapText="true" HBox.hgrow="ALWAYS" />
                 <Button onAction="#sendMessage" styleClass="send-button" text="Send" />
             </HBox>
         </VBox>
