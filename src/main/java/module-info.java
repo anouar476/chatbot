@@ -18,6 +18,7 @@ module com.example.demo {
     requires com.google.gson;
     requires java.logging;
     requires annotations;
+    requires org.apache.pdfbox;
     opens com.example.demo1 to javafx.fxml;
     exports com.example.demo1;
 }

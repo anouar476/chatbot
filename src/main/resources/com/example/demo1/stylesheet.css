@@ -239,3 +239,64 @@
         -fx-flex-direction: column;
     }
 }
+
+.new-chat-button {
+}
+/* General styling for ListView */
+.list-view {
+    -fx-background-color: #f9f9f9;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 5;
+}
+
+/* Styling for list cells inside ListView */
+.list-cell {
+    -fx-padding: 10;
+    -fx-text-fill: #333;
+    -fx-font-family: "Arial";
+    -fx-font-size: 14px;
+    -fx-background-color: transparent;
+}
+
+/* Highlight on hover */
+.list-cell:hover {
+    -fx-background-color: #e6f7ff;
+}
+
+/* Highlight selected item */
+.list-cell:selected {
+    -fx-background-color: #1890ff;
+    -fx-text-fill: white;
+}
+
+/* Style for chat history ListView */
+.history-list {
+    -fx-background-color: #f0f5ff;
+    -fx-border-color: #ccc;
+}
+
+/* Style for messages ListView */
+.messages-list {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d9d9d9;
+}
+/* Align user messages (right) */
+.messages-list .you {
+    -fx-alignment: center-right;
+    -fx-background-color: lightblue;
+    -fx-padding: 5px 10px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+
+/* Align AI responses (left) */
+.messages-list .ai {
+    -fx-alignment: center-left;
+    -fx-background-color: lightgray;
+    -fx-padding: 5px 10px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+
