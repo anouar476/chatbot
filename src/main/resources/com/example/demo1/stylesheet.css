@@ -299,4 +299,66 @@
     -fx-border-radius: 10px;
     -fx-background-radius: 10px;
 }
+/* styles.css */
 
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-background-color: #f0f0f0;
+}
+
+.menu-bar {
+    -fx-background-color: #4a90e2;
+    -fx-text-fill: white;
+}
+
+.menu-item {
+    -fx-text-fill: white;
+}
+
+.sidebar {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0 1 0 0;
+}
+
+.new-chat-button {
+    -fx-background-color: #4a90e2;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.new-chat-button:hover {
+    -fx-background-color: #357ABD;
+}
+
+.history-list {
+    -fx-background-color: #ffffff;
+}
+
+.chat-area {
+    -fx-background-color: #ffffff;
+    -fx-padding: 10;
+}
+
+.messages-list {
+    -fx-background-color: #ffffff;
+}
+
+.message-input-box {
+    -fx-padding: 10;
+}
+
+.send-button {
+    -fx-background-color: #4caf50;
+    -fx-text-fill: white;
+}
+
+.send-button:hover {
+    -fx-background-color: #45a049;
+}
+
+.text-area {
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 5;
+    -fx-background-color: #f9f9f9;
+}
