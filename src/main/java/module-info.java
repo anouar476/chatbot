@@ -19,6 +19,8 @@ module com.example.demo {
     requires java.logging;
     requires annotations;
     requires org.apache.pdfbox;
+    requires json.simple;
+    requires org.json;
     opens com.example.demo1 to javafx.fxml;
     exports com.example.demo1;
 }

@@ -1,147 +1,105 @@
-    package com.example.demo1;
+package com.example.demo1;
 
-    import javafx.application.Platform;
-    import javafx.fxml.FXML;
-    import javafx.scene.control.Button;
-    import javafx.scene.control.ListView;
-    import javafx.scene.control.TextArea;
-    import javafx.scene.layout.BorderPane;
-    import javafx.scene.layout.VBox;
-    import javafx.scene.input.KeyCode;
-    import okhttp3.*;
-    import com.google.gson.JsonObject;
-    import com.google.gson.JsonArray;
-    import com.google.gson.JsonParser;
-    import org.jetbrains.annotations.NotNull;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
+import org.json.JSONObject;
 
-    import java.io.IOException;
-    import java.util.Objects;
+public class DashboardController {
 
-    public class DashboardController {
+    @FXML
+    private ListView<String> chatHistoryList; // List of previous chats
+    @FXML
+    private ListView<String> messagesView; // List of messages in the current chat
+    @FXML
+    private TextArea messageInput; // TextArea for inputting messages
+    @FXML
+    private Button sendButton; // Button to send a message
 
-        public BorderPane root1;
-        @FXML
-        private ListView<String> chatHistoryList;
+    private ObservableList<String> chatHistory = FXCollections.observableArrayList();
+    private ObservableList<String> messages = FXCollections.observableArrayList();
 
-        @FXML
-        private ListView<String> messagesView;
+    @FXML
+    public void initialize() {
+        // Initialize ListView for chat history and messages
+        chatHistoryList.setItems(chatHistory);
+        messagesView.setItems(messages);
+    }
 
-        @FXML
-        private TextArea messageInput;
+    // Method to handle the "New Chat" button click
+    @FXML
+    private void startNewChat() {
+        // Clear the current messages and add to the chat history
+        String newChatName = "Chat " + (chatHistory.size() + 1);
+        chatHistory.add(newChatName);
+        messages.clear();
+        messageInput.clear();
+    }
 
-        @FXML
-        private Button newChatButton; // New Chat Button
+    // Method to handle the "Send" button click
+    @FXML
+    private void sendMessage() {
+        String message = messageInput.getText().trim();
+        if (!message.isEmpty()) {
+            // Add the user's message to the messages list with a human emoji
+            messages.add("You : " + message);
 
-        @FXML
-        private VBox leftSidebar;
+            // Send the message to the server (or ChatbotClient)
+            String response = ChatbotClient.sendQuestion(message);
 
-        private boolean isHistoryVisible = true;
-        private static final String API_KEY = "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";
-        private static final String OPENAI_URL = "https://api.openai.com/v1/chat/completions";
+            // Check if the response is valid
+            if (response != null && !response.isEmpty()) {
+                // Try to parse the response as a JSON (assuming the response is a JSON string)
+                try {
+                    // Assuming the response is in JSON format, and contains an "answer" key
+                    JSONObject jsonResponse = new JSONObject(response);
+                    String answer = jsonResponse.getString("answer");
 
-        @FXML
-        private void initialize() {
-            setupListeners();
-        }
-
-        private void setupListeners() {
-            messageInput.setOnKeyPressed(event -> {
-                if (event.getCode() == KeyCode.ENTER) {
-                    sendMessage();
-                    event.consume();
+                    // Add the bot's response to the messages list with a machine emoji
+                    messages.add("Bot 🤖: " + answer);
+                } catch (Exception e) {
+                    // If the response is not JSON, display it as a plain string with a machine emoji
+                    messages.add("Bot 🤖: " + response);
                 }
-            });
-
-            // New Chat Button Event Handler
-            newChatButton.setOnAction(event -> startNewChat());
-        }
-
-        @FXML
-        private void sendMessage() {
-            String message = messageInput.getText().trim();
-            if (!message.isEmpty()) {
-                // Add the message to the messages view
-                messagesView.getItems().add("You: " + message);
-                // Only add the first message sent by the user to the history
-                if (messagesView.getItems().size() == 1) {
-                    chatHistoryList.getItems().add(message);
-                }
-                messageInput.clear();
-                getAIResponse(message);
+            } else {
+                // If the response is empty or null, display a fallback message with a machine emoji
+                messages.add("Bot 🤖: Sorry, I couldn't understand your question.");
             }
-        }
 
-        @FXML
-        private void startNewChat() {
-            messagesView.getItems().clear();
+            // Clear the message input field after sending
             messageInput.clear();
         }
-
-        private void saveFirstUserMessageToHistory() {
-            if (!messagesView.getItems().isEmpty()) {
-                // Only save the first message sent by the user to the chat history
-                String firstMessage = messagesView.getItems().getFirst().substring(4); // Remove the "You: " prefix
-                chatHistoryList.getItems().add(firstMessage);
-            }
-        }
-
-        private void getAIResponse(String prompt) {
-            OkHttpClient client = new OkHttpClient();
-
-            JsonObject jsonRequest = new JsonObject();
-            jsonRequest.addProperty("model", "gpt-3.5-turbo");
-            JsonArray messages = new JsonArray();
-
-            JsonObject userMessage = new JsonObject();
-            userMessage.addProperty("role", "user");
-            userMessage.addProperty("content", prompt);
-
-            messages.add(userMessage);
-            jsonRequest.add("messages", messages);
-
-            RequestBody body = RequestBody.create(
-                    Objects.requireNonNull(MediaType.parse("application/json")),
-                    jsonRequest.toString()
-            );
-
-            Request request = new Request.Builder()
-                    .url(OPENAI_URL)
-                    .post(body)
-                    .addHeader("Authorization", "Bearer " + API_KEY)
-                    .build();
-
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                    Platform.runLater(() -> messagesView.getItems().add("Error: " + e.getMessage()));
-                }
-
-                @Override
-                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    if (response.isSuccessful()) {
-                        String responseBody = response.body().string();
-                        String aiResponse = extractAIResponse(responseBody);
-                        Platform.runLater(() -> messagesView.getItems().add("AI: " + aiResponse));
-                    } else {
-                        Platform.runLater(() -> messagesView.getItems().add("Error: " + response.message()));
-                    }
-                }
-            });
-        }
-
-        private String extractAIResponse(String responseBody) {
-            JsonObject jsonResponse = JsonParser.parseString(responseBody).getAsJsonObject();
-            JsonArray choices = jsonResponse.getAsJsonArray("choices");
-            JsonObject firstChoice = choices.get(0).getAsJsonObject();
-            return firstChoice.getAsJsonObject("message").get("content").getAsString().trim();
-        }
-
-        public boolean isHistoryVisible() {
-            return isHistoryVisible;
-        }
-
-        public void setHistoryVisible(boolean historyVisible) {
-            isHistoryVisible = historyVisible;
-        }
-
     }
+
+
+    // Handle "Close" menu action
+    @FXML
+    private void handleClose() {
+        // Close the application (or handle as needed)
+        System.exit(0);
+    }
+
+    // Handle "Preferences" menu action
+    @FXML
+    private void handlePreferences() {
+        // Add preferences logic if needed (e.g., settings or configuration)
+    }
+
+    // Handle "About" menu action
+    @FXML
+    private void handleAbout() {
+        // Show About dialog or information
+        System.out.println("About this Chatbot App...");
+    }
+
+    // Handle "Contact Support" menu action
+    @FXML
+    private void handleContactSupport() {
+        // Add support contact logic if needed
+        System.out.println("Contact support...");
+    }
+}
