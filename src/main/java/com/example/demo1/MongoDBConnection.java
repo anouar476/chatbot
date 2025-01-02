@@ -17,25 +17,20 @@ public class MongoDBConnection {
     private static final String PHONE_REGEX = "^\\d{10}$";
     public Label userCountLabel;
 
-    // Replace with your MongoDB Atlas connection string
     private static final String CONNECTION_STRING = "mongodb://localhost:27017";
 
     public static void connect() {
         try {
-            // Configure MongoDB Atlas connection
             ConnectionString connString = new ConnectionString(CONNECTION_STRING);
             MongoClientSettings settings = MongoClientSettings.builder()
                     .applyConnectionString(connString)
                     .build();
 
-            // Create MongoDB client
             mongoClient = MongoClients.create(settings);
 
-            // Connect to the database and collection
             MongoDatabase database = mongoClient.getDatabase("UserDatabase");
             usersCollection = database.getCollection("Users");
 
-            // Create unique indexes on "username" and "email"
             IndexOptions indexOptions = new IndexOptions().unique(true);
             usersCollection.createIndex(new Document("username", 1), indexOptions);
             usersCollection.createIndex(new Document("email", 1), indexOptions);

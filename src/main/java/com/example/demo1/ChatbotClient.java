@@ -18,22 +18,19 @@ public class ChatbotClient {
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setDoOutput(true);
 
-            // Prepare JSON payload
             String jsonInput = String.format("{\"question\": \"%s\"}", question);
 
-            // Send request
             try (OutputStream os = connection.getOutputStream()) {
                 byte[] input = jsonInput.getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
             }
 
-            // Get the response
             int status = connection.getResponseCode();
             if (status == HttpURLConnection.HTTP_OK) {
                 Scanner scanner = new Scanner(connection.getInputStream(), StandardCharsets.UTF_8);
                 String response = scanner.useDelimiter("\\A").next();
                 scanner.close();
-                return response; // JSON response
+                return response;
             } else {
                 return "Error: Server responded with status code " + status;
             }

@@ -1,105 +1,118 @@
 package com.example.demo1;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import org.json.JSONObject;
 
 public class DashboardController {
 
     @FXML
-    private ListView<String> chatHistoryList; // List of previous chats
+    private ListView<HBox> chatHistoryList;
     @FXML
-    private ListView<String> messagesView; // List of messages in the current chat
+    private ListView<HBox> messagesView;
     @FXML
-    private TextArea messageInput; // TextArea for inputting messages
+    private TextArea messageInput;
     @FXML
-    private Button sendButton; // Button to send a message
+    private Button sendButton;
 
-    private ObservableList<String> chatHistory = FXCollections.observableArrayList();
-    private ObservableList<String> messages = FXCollections.observableArrayList();
+    private ObservableList<HBox> chatHistory = FXCollections.observableArrayList();
+    private ObservableList<HBox> messages = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
-        // Initialize ListView for chat history and messages
         chatHistoryList.setItems(chatHistory);
         messagesView.setItems(messages);
     }
 
-    // Method to handle the "New Chat" button click
     @FXML
     private void startNewChat() {
-        // Clear the current messages and add to the chat history
         String newChatName = "Chat " + (chatHistory.size() + 1);
-        chatHistory.add(newChatName);
+        HBox chatBox = new HBox(new Text(newChatName));
+        chatHistory.add(chatBox);
         messages.clear();
         messageInput.clear();
     }
 
-    // Method to handle the "Send" button click
     @FXML
     private void sendMessage() {
         String message = messageInput.getText().trim();
         if (!message.isEmpty()) {
-            // Add the user's message to the messages list with a human emoji
-            messages.add("You : " + message);
+            addMessage(message, Pos.CENTER_RIGHT, Color.LIGHTBLUE);
 
-            // Send the message to the server (or ChatbotClient)
             String response = ChatbotClient.sendQuestion(message);
 
-            // Check if the response is valid
             if (response != null && !response.isEmpty()) {
-                // Try to parse the response as a JSON (assuming the response is a JSON string)
                 try {
-                    // Assuming the response is in JSON format, and contains an "answer" key
                     JSONObject jsonResponse = new JSONObject(response);
                     String answer = jsonResponse.getString("answer");
-
-                    // Add the bot's response to the messages list with a machine emoji
-                    messages.add("Bot 🤖: " + answer);
+                    addMessage(formatMessage(answer), Pos.CENTER_LEFT, Color.LIGHTGREEN);
                 } catch (Exception e) {
-                    // If the response is not JSON, display it as a plain string with a machine emoji
-                    messages.add("Bot 🤖: " + response);
+                    addMessage(formatMessage(response), Pos.CENTER_LEFT, Color.LIGHTGREEN);
                 }
             } else {
-                // If the response is empty or null, display a fallback message with a machine emoji
-                messages.add("Bot 🤖: Sorry, I couldn't understand your question.");
+                addMessage(formatMessage("Sorry, I couldn't understand your question."), Pos.CENTER_LEFT, Color.LIGHTGREEN);
             }
 
-            // Clear the message input field after sending
             messageInput.clear();
         }
     }
 
+    private void addMessage(String message, Pos alignment, Color color) {
+        Text text = new Text(message);
+        HBox hbox = new HBox(text);
+        hbox.setAlignment(alignment);
+        hbox.setStyle("-fx-padding: 10; -fx-background-radius: 10;");
 
-    // Handle "Close" menu action
+        if (alignment == Pos.CENTER_RIGHT) {
+            hbox.setStyle("-fx-background-color: lightblue; -fx-padding: 10; -fx-background-radius: 10;");
+        } else {
+            hbox.setStyle("-fx-background-color: lightgreen; -fx-padding: 10; -fx-background-radius: 10;");
+        }
+
+        Platform.runLater(() -> messages.add(hbox));
+    }
+
+    private String formatMessage(String message) {
+        String[] words = message.split(" ");
+        StringBuilder formattedMessage = new StringBuilder();
+        int wordCount = 0;
+
+        for (String word : words) {
+            formattedMessage.append(word).append(" ");
+            wordCount++;
+            if (wordCount == 10) {
+                formattedMessage.append("\n");
+                wordCount = 0;
+            }
+        }
+        return formattedMessage.toString().trim();
+    }
+
     @FXML
     private void handleClose() {
-        // Close the application (or handle as needed)
         System.exit(0);
     }
 
-    // Handle "Preferences" menu action
     @FXML
     private void handlePreferences() {
-        // Add preferences logic if needed (e.g., settings or configuration)
     }
 
-    // Handle "About" menu action
     @FXML
     private void handleAbout() {
-        // Show About dialog or information
         System.out.println("About this Chatbot App...");
     }
 
-    // Handle "Contact Support" menu action
     @FXML
     private void handleContactSupport() {
-        // Add support contact logic if needed
         System.out.println("Contact support...");
     }
 }

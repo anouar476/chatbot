@@ -2,11 +2,15 @@ package com.example.demo1;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import okhttp3.*;
 import org.json.JSONObject;
 
@@ -15,14 +19,11 @@ import java.io.IOException;
 public class ChatController {
 
     @FXML
-    private ListView<String> chatHistoryList;
-
+    private ListView<HBox> chatHistoryList;
     @FXML
-    private ListView<String> messagesView;
-
+    private ListView<HBox> messagesView;
     @FXML
     private TextArea messageInput;
-
     @FXML
     private Button newChatButton;
 
@@ -49,9 +50,10 @@ public class ChatController {
     private void sendMessage() {
         String message = messageInput.getText().trim();
         if (!message.isEmpty()) {
-            messagesView.getItems().add("You: " + message);
+            addMessage("You: " + message, Pos.CENTER_RIGHT, Color.LIGHTBLUE);
+
             if (messagesView.getItems().size() == 1) {
-                chatHistoryList.getItems().add(message);
+                chatHistoryList.getItems().add(new HBox(new Text(message)));
             }
             messageInput.clear();
             getAIResponse(message);
@@ -65,23 +67,19 @@ public class ChatController {
     }
 
     private void getAIResponse(String prompt) {
-        // Create the JSON body for the request
         RequestBody body = RequestBody.create(
                 MediaType.parse("application/json"),
                 "{\"question\":\"" + prompt + "\"}"
         );
 
-        // Create the request
         Request request = new Request.Builder()
                 .url(BACKEND_URL)
                 .post(body)
                 .build();
 
-        // Asynchronous request
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                // Handle failure
                 Platform.runLater(() -> showAlert("Error: " + e.getMessage()));
             }
 
@@ -91,12 +89,10 @@ public class ChatController {
                     String responseBody = response.body().string();
 
                     try {
-                        // Parse the JSON response
                         JSONObject jsonResponse = new JSONObject(responseBody);
-                        String aiMessage = jsonResponse.getString("answer"); // Use "answer" from the JSON
+                        String aiMessage = jsonResponse.getString("answer");
 
-                        // Update the UI with the message (without showing JSON structure)
-                        Platform.runLater(() -> messagesView.getItems().add("AI: " + aiMessage));
+                        Platform.runLater(() -> addMessage("AI: " + formatMessage(aiMessage), Pos.CENTER_LEFT, Color.LIGHTGREEN));
 
                     } catch (Exception e) {
                         Platform.runLater(() -> showAlert("Error parsing the response: " + e.getMessage()));
@@ -107,6 +103,37 @@ public class ChatController {
             }
 
         });
+    }
+
+    private void addMessage(String message, Pos alignment, Color color) {
+        Text text = new Text(message);
+        HBox hbox = new HBox(text);
+        hbox.setAlignment(alignment);
+        hbox.setStyle("-fx-padding: 10; -fx-background-radius: 10;");
+
+        if (alignment == Pos.CENTER_RIGHT) {
+            hbox.setStyle("-fx-background-color: lightblue; -fx-padding: 10; -fx-background-radius: 10;");
+        } else {
+            hbox.setStyle("-fx-background-color: lightgreen; -fx-padding: 10; -fx-background-radius: 10;");
+        }
+
+        Platform.runLater(() -> messagesView.getItems().add(hbox));
+    }
+
+    private String formatMessage(String message) {
+        String[] words = message.split(" ");
+        StringBuilder formattedMessage = new StringBuilder();
+        int wordCount = 0;
+
+        for (String word : words) {
+            formattedMessage.append(word).append(" ");
+            wordCount++;
+            if (wordCount == 10) {
+                formattedMessage.append("\n");
+                wordCount = 0;
+            }
+        }
+        return formattedMessage.toString().trim();
     }
 
     private void showAlert(String message) {
