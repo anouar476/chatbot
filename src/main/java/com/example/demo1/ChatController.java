@@ -39,7 +39,7 @@ public class ChatController {
         messageInput.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 sendMessage();
-                event.consume();
+                event.consume();  // Prevent newline in TextArea
             }
         });
 
@@ -55,8 +55,12 @@ public class ChatController {
             if (messagesView.getItems().size() == 1) {
                 chatHistoryList.getItems().add(new HBox(new Text(message)));
             }
+
+            // Immediately add the user message and clear the input
             messageInput.clear();
-            getAIResponse(message);
+
+            // Send the question to the AI asynchronously
+            new Thread(() -> getAIResponse(message)).start();
         }
     }
 

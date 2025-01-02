@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -31,6 +32,14 @@ public class DashboardController {
     public void initialize() {
         chatHistoryList.setItems(chatHistory);
         messagesView.setItems(messages);
+
+        // Set up the listener for the Enter key
+        messageInput.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                sendMessage();
+                event.consume();  // Prevent newline in TextArea
+            }
+        });
     }
 
     @FXML
@@ -48,21 +57,24 @@ public class DashboardController {
         if (!message.isEmpty()) {
             addMessage(message, Pos.CENTER_RIGHT, Color.LIGHTBLUE);
 
-            String response = ChatbotClient.sendQuestion(message);
-
-            if (response != null && !response.isEmpty()) {
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    String answer = jsonResponse.getString("answer");
-                    addMessage(formatMessage(answer), Pos.CENTER_LEFT, Color.LIGHTGREEN);
-                } catch (Exception e) {
-                    addMessage(formatMessage(response), Pos.CENTER_LEFT, Color.LIGHTGREEN);
-                }
-            } else {
-                addMessage(formatMessage("Sorry, I couldn't understand your question."), Pos.CENTER_LEFT, Color.LIGHTGREEN);
-            }
-
+            // Immediately add the user message and clear the input
             messageInput.clear();
+
+            // Send the question to the AI asynchronously
+            new Thread(() -> {
+                String response = ChatbotClient.sendQuestion(message);
+                if (response != null && !response.isEmpty()) {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        String answer = jsonResponse.getString("answer");
+                        Platform.runLater(() -> addMessage(formatMessage(answer), Pos.CENTER_LEFT, Color.LIGHTGREEN));
+                    } catch (Exception e) {
+                        Platform.runLater(() -> addMessage(formatMessage(response), Pos.CENTER_LEFT, Color.LIGHTGREEN));
+                    }
+                } else {
+                    Platform.runLater(() -> addMessage(formatMessage("Sorry, I couldn't understand your question."), Pos.CENTER_LEFT, Color.LIGHTGREEN));
+                }
+            }).start();
         }
     }
 
@@ -78,7 +90,7 @@ public class DashboardController {
             hbox.setStyle("-fx-background-color: lightgreen; -fx-padding: 10; -fx-background-radius: 10;");
         }
 
-        Platform.runLater(() -> messages.add(hbox));
+        messages.add(hbox);
     }
 
     private String formatMessage(String message) {
