@@ -11,23 +11,6 @@
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane fx:id="root1" maxHeight="700" maxWidth="1300" minHeight="700" minWidth="1300" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo1.DashboardController">
-    <!-- Top menu -->
-    <top>
-        <MenuBar styleClass="menu-bar">
-            <Menu text="File">
-                <MenuItem text="Close" />
-            </Menu>
-            <Menu text="Edit">
-                <MenuItem text="Preferences" />
-            </Menu>
-            <Menu text="Help">
-                <MenuItem text="About" />
-                <MenuItem text="Contact Support" />
-            </Menu>
-        </MenuBar>
-    </top>
-
-    <!-- Left sidebar -->
     <left>
         <VBox fx:id="leftSidebar" minWidth="250" spacing="10" styleClass="sidebar">
             <Button fx:id="newChatButton" mnemonicParsing="false" text="New Chat" onAction="#startNewChat" styleClass="new-chat-button"/>

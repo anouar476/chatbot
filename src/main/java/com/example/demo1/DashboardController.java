@@ -46,6 +46,7 @@ public class DashboardController {
     private void startNewChat() {
         String newChatName = "Chat " + (chatHistory.size() + 1);
         HBox chatBox = new HBox(new Text(newChatName));
+        AnimationUtil.fadeIn(chatBox);
         chatHistory.add(chatBox);
         messages.clear();
         messageInput.clear();
@@ -91,6 +92,7 @@ public class DashboardController {
         }
 
         messages.add(hbox);
+        AnimationUtil.fadeIn(hbox);
     }
 
     private String formatMessage(String message) {
