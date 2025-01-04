@@ -28,7 +28,7 @@
 
                 <!-- Logo/Image -->
                 <ImageView fitHeight="120.0" fitWidth="120.0" preserveRatio="true">
-                    <Image url="@image1-removebg-preview.png" />
+                    <Image url="@img.png" />
                 </ImageView>
 
                 <!-- Welcome Text -->
