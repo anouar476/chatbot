@@ -33,14 +33,12 @@ public class DashboardController {
         chatHistoryList.setItems(chatHistory);
         messagesView.setItems(messages);
 
-        // Ajouter un message de bienvenue
-        addMessage("Salut, je suis ici pour vous aider à savoir toutes les informations concernant ENSET.", Pos.CENTER_LEFT, Color.LIGHTGREEN);
+        addMessage("Salut, je suis ici pour vous aider à savoir toutes les informations necessaires concernant ENSET \uD83C\uDF93 .", Pos.CENTER_LEFT, Color.LIGHTGREEN);
 
-        // Listener pour la touche Entrée
         messageInput.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 sendMessage();
-                event.consume();  // Empêche un saut de ligne dans la TextArea
+                event.consume();
             }
         });
     }
@@ -99,21 +97,21 @@ public class DashboardController {
         AnimationUtil.fadeIn(hbox);
     }
 
-    private String formatMessage(String message) {
-        String[] words = message.split(" ");
-        StringBuilder formattedMessage = new StringBuilder();
-        int wordCount = 0;
-
-        for (String word : words) {
-            formattedMessage.append(word).append(" ");
-            wordCount++;
-            if (wordCount == 10) {
-                formattedMessage.append("\n");
-                wordCount = 0;
-            }
+private String formatMessage(String message) {
+    String[] words = message.split(" ");
+    StringBuilder formattedMessage = new StringBuilder();
+    int lineLength = 0;
+    int maxLineLength = 80;
+    for (String word : words) {
+        if (lineLength + word.length() + 1 > maxLineLength) {
+            formattedMessage.append("\n");
+            lineLength = 0;
         }
-        return formattedMessage.toString().trim();
+        formattedMessage.append(word).append(" ");
+        lineLength += word.length() + 1;
     }
+    return formattedMessage.toString().trim();
+}
 
     @FXML
     private void handleClose() {
