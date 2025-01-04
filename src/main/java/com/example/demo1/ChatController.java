@@ -36,6 +36,7 @@ public class ChatController {
     }
 
     private void setupListeners() {
+        addMessage("Salut, je suis ici pour vous aider à savoir toutes les informations concernant ENSET.", Pos.CENTER_LEFT, Color.LIGHTGREEN);
         messageInput.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 sendMessage();

@@ -33,14 +33,18 @@ public class DashboardController {
         chatHistoryList.setItems(chatHistory);
         messagesView.setItems(messages);
 
-        // Set up the listener for the Enter key
+        // Ajouter un message de bienvenue
+        addMessage("Salut, je suis ici pour vous aider à savoir toutes les informations concernant ENSET.", Pos.CENTER_LEFT, Color.LIGHTGREEN);
+
+        // Listener pour la touche Entrée
         messageInput.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 sendMessage();
-                event.consume();  // Prevent newline in TextArea
+                event.consume();  // Empêche un saut de ligne dans la TextArea
             }
         });
     }
+
 
     @FXML
     private void startNewChat() {

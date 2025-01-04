@@ -16,7 +16,7 @@ public class HelloApplication extends Application {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/demo1/dashboard.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/demo1/login.fxml"));
         Scene scene = new Scene(fxmlLoader.load(),1300,700);
         stage.setTitle("Login Form");
         stage.setScene(scene);
