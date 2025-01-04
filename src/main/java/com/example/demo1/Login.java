@@ -35,7 +35,6 @@ public class Login {
         }
 
         try {
-            // Add debug logging
             LOGGER.info("Attempting login for user: " + username);
 
             if (MongoDBConnection.validateUser(username, password)) {
@@ -56,7 +55,6 @@ public class Login {
 
     private void loadDashboard(String username) {
         try {
-            // Create new FXMLLoader with explicit path
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/example/demo1/dashboard.fxml")
             );
@@ -65,11 +63,9 @@ public class Login {
             Parent dashboardRoot = loader.load();
             Stage stage = (Stage) usernameField.getScene().getWindow();
 
-            // Create and set new scene with specific dimensions
             Scene dashboardScene = new Scene(dashboardRoot);
             dashboardScene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("stylesheet.css")).toExternalForm());
 
-            // Set the scene and show
             stage.setScene(dashboardScene);
             stage.setTitle("Dashboard - " + username);
             stage.centerOnScreen();
