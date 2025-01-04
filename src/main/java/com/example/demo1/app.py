@@ -15,7 +15,7 @@ ENSET_KEYWORDS = [
     "administration", "scolarité",
     # English keywords
     "school", "course", "department", "student", "professor", "teachers", "exam", 
-    "training", "schedule", "registration", "admission", "grade", "absence", ''
+    "training", "schedule", "registration", "admission", "grade", "absence",
     "library", "administration", "study", "class",
     # Arabic keywords
     "المدرسة", "دورة", "قسم", "طالب", "أستاذ", "امتحان", "تدريب", "جدول", 
