@@ -46,7 +46,7 @@ public class DashboardController {
 
     @FXML
     private void startNewChat() {
-        String newChatName = "Chat " + (chatHistory.size() + 1);
+        String newChatName = "Chat gjjh" + (chatHistory.size() + 1);
         HBox chatBox = new HBox(new Text(newChatName));
         AnimationUtil.fadeIn(chatBox);
         chatHistory.add(chatBox);
