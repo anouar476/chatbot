@@ -33,7 +33,7 @@ public class DashboardController {
         chatHistoryList.setItems(chatHistory);
         messagesView.setItems(messages);
 
-        addMessage("Salut, je suis ici pour vous aider à savoir toutes les informations necessaires concernant ENSET \uD83C\uDF93 .", Pos.CENTER_LEFT, Color.LIGHTGREEN);
+        addMessage("Hello, je suis ici pour vous aider à savoir toutes les informations necessaires concernant ENSET \uD83C\uDF93 .", Pos.CENTER_LEFT, Color.LIGHTGREEN);
 
         messageInput.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
