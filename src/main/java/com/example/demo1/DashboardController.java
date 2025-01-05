@@ -95,6 +95,8 @@ public class DashboardController {
 
     private void addMessage(String message, Pos alignment, Color color) {
         Text text = new Text(message);
+        text.wrappingWidthProperty().bind(messagesView.widthProperty().subtract(40)); // Decrease padding value
+
         HBox hbox = new HBox(text);
         hbox.setAlignment(alignment);
         hbox.setStyle("-fx-padding: 10; -fx-background-radius: 10;");
@@ -108,7 +110,6 @@ public class DashboardController {
         messages.add(hbox);
         AnimationUtil.fadeIn(hbox);
     }
-
     private String formatMessage(String message) {
         String[] words = message.split(" ");
         StringBuilder formattedMessage = new StringBuilder();
