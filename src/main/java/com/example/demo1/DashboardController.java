@@ -81,7 +81,7 @@ public class DashboardController {
                         String answer = jsonResponse.getString("answer");
                         Platform.runLater(() -> {
                             addMessage(formatMessage(answer), Pos.CENTER_LEFT, Color.LIGHTGREEN);
-                            MongoDBConnection.storeConversation("Fatima-azzahra", message, answer, chatHistoryList.getSelectionModel().getSelectedItem()); // Store with chat name
+                            MongoDBConnection.storeConversation( message, answer, chatHistoryList.getSelectionModel().getSelectedItem()); // Store with chat name
                         });
                     } catch (Exception e) {
                         Platform.runLater(() -> addMessage(formatMessage(response), Pos.CENTER_LEFT, Color.LIGHTGREEN));
@@ -128,7 +128,7 @@ public class DashboardController {
     @FXML
     private void loadChatHistory() {
         // Load chat history from the database
-        List<Document> conversations = MongoDBConnection.getConversations("Fatima-azzahra"); // Replace with actual username
+        List<Document> conversations = MongoDBConnection.getConversations(); // Replace with actual username
         for (Document conversation : conversations) {
             String chatName = conversation.getString("chatName");
             if (chatName != null && !chatHistory.contains(chatName)) {
@@ -141,7 +141,7 @@ public class DashboardController {
     private void loadChat(String chatName) {
         // Load messages for the selected chat
         messages.clear();
-        List<Document> conversations = MongoDBConnection.getConversations("Fatima-azzahra"); // Replace with actual username
+        List<Document> conversations = MongoDBConnection.getConversations(); // Replace with actual username
         for (Document conversation : conversations) {
             if (chatName.equals(conversation.getString("chatName"))) {
                 String message = conversation.getString("message");
