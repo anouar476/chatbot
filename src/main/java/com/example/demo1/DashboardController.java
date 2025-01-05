@@ -95,7 +95,7 @@ public class DashboardController {
 
     private void addMessage(String message, Pos alignment, Color color) {
         Text text = new Text(message);
-        text.wrappingWidthProperty().bind(messagesView.widthProperty().subtract(40)); // Decrease padding value
+        text.wrappingWidthProperty().bind(messagesView.widthProperty().subtract(10)); // Further decrease padding value
 
         HBox hbox = new HBox(text);
         hbox.setAlignment(alignment);
