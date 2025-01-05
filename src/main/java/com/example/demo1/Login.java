@@ -115,5 +115,5 @@ public class Login {
         alert.setHeaderText(header);
         alert.setContentText(content);
         alert.showAndWait();
-    }
+}
 }
