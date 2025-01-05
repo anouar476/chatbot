@@ -8,11 +8,13 @@ import com.mongodb.client.model.IndexOptions;
 import javafx.scene.control.Label;
 import org.bson.Document;
 
+import java.util.Date;
 import java.util.regex.Pattern;
 
 public class MongoDBConnection {
     static MongoClient mongoClient;
     private static MongoCollection<Document> usersCollection;
+    private static MongoCollection<Document> conversationsCollection; // Define conversationsCollection
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
     private static final String PHONE_REGEX = "^\\d{10}$";
     public Label userCountLabel;
@@ -30,6 +32,7 @@ public class MongoDBConnection {
 
             MongoDatabase database = mongoClient.getDatabase("UserDatabase");
             usersCollection = database.getCollection("Users");
+            conversationsCollection = database.getCollection("Conversations"); // Initialize conversationsCollection
 
             IndexOptions indexOptions = new IndexOptions().unique(true);
             usersCollection.createIndex(new Document("username", 1), indexOptions);
@@ -90,6 +93,20 @@ public class MongoDBConnection {
         } catch (MongoException e) {
             System.err.println("Error validating user: " + e.getMessage());
             return false;
+        }
+    }
+
+    public static void storeConversation(String username, String message, String response) {
+        try {
+            Document conversation = new Document()
+                    .append("username", username)
+                    .append("message", message)
+                    .append("response", response)
+                    .append("timestamp", new Date());
+
+            conversationsCollection.insertOne(conversation);
+        } catch (MongoException e) {
+            System.err.println("Error storing conversation: " + e.getMessage());
         }
     }
 

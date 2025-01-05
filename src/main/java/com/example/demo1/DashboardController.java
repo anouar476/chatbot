@@ -70,7 +70,10 @@ public class DashboardController {
                     try {
                         JSONObject jsonResponse = new JSONObject(response);
                         String answer = jsonResponse.getString("answer");
-                        Platform.runLater(() -> addMessage(formatMessage(answer), Pos.CENTER_LEFT, Color.LIGHTGREEN));
+                        Platform.runLater(() -> {
+                            addMessage(formatMessage(answer), Pos.CENTER_LEFT, Color.LIGHTGREEN);
+                            MongoDBConnection.storeConversation("Fatima-azzahra", message, answer); // Replace "username" with the actual username
+                        });
                     } catch (Exception e) {
                         Platform.runLater(() -> addMessage(formatMessage(response), Pos.CENTER_LEFT, Color.LIGHTGREEN));
                     }
