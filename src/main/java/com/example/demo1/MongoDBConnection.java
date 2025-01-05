@@ -8,7 +8,9 @@ import com.mongodb.client.model.IndexOptions;
 import javafx.scene.control.Label;
 import org.bson.Document;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class MongoDBConnection {
@@ -96,12 +98,13 @@ public class MongoDBConnection {
         }
     }
 
-    public static void storeConversation(String username, String message, String response) {
+    public static void storeConversation(String username, String message, String response, String chatName) {
         try {
             Document conversation = new Document()
                     .append("username", username)
                     .append("message", message)
                     .append("response", response)
+                    .append("chatName", chatName)
                     .append("timestamp", new Date());
 
             conversationsCollection.insertOne(conversation);
@@ -109,7 +112,18 @@ public class MongoDBConnection {
             System.err.println("Error storing conversation: " + e.getMessage());
         }
     }
-
+    public static List<Document> getConversations(String username) {
+        List<Document> conversations = new ArrayList<>();
+        try {
+            FindIterable<Document> iterable = conversationsCollection.find(new Document("username", username));
+            for (Document doc : iterable) {
+                conversations.add(doc);
+            }
+        } catch (MongoException e) {
+            System.err.println("Error retrieving conversations: " + e.getMessage());
+        }
+        return conversations;
+    }
     public static void close() {
         if (mongoClient != null) {
             mongoClient.close();

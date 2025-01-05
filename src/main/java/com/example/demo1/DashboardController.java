@@ -12,12 +12,15 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import org.bson.Document;
 import org.json.JSONObject;
+
+import java.util.List;
 
 public class DashboardController {
 
     @FXML
-    private ListView<HBox> chatHistoryList;
+    private ListView<String> chatHistoryList; // ListView for chat history
     @FXML
     private ListView<HBox> messagesView;
     @FXML
@@ -25,13 +28,19 @@ public class DashboardController {
     @FXML
     private Button sendButton;
 
-    private ObservableList<HBox> chatHistory = FXCollections.observableArrayList();
+    private ObservableList<String> chatHistory = FXCollections.observableArrayList();
     private ObservableList<HBox> messages = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
         chatHistoryList.setItems(chatHistory);
         messagesView.setItems(messages);
+
+        chatHistoryList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                loadChat(newValue);
+            }
+        });
 
         addMessage("Hello, je suis ici pour vous aider à savoir toutes les informations necessaires concernant ENSET \uD83C\uDF93 .", Pos.CENTER_LEFT, Color.LIGHTGREEN);
 
@@ -41,15 +50,15 @@ public class DashboardController {
                 event.consume();
             }
         });
-    }
 
+        loadChatHistory(); // Load chat history
+    }
 
     @FXML
     private void startNewChat() {
         String newChatName = "Chat " + (chatHistory.size() + 1);
-        HBox chatBox = new HBox(new Text(newChatName));
-        AnimationUtil.fadeIn(chatBox);
-        chatHistory.add(chatBox);
+        chatHistory.add(newChatName);
+        chatHistoryList.getSelectionModel().select(newChatName);
         messages.clear();
         messageInput.clear();
     }
@@ -72,7 +81,7 @@ public class DashboardController {
                         String answer = jsonResponse.getString("answer");
                         Platform.runLater(() -> {
                             addMessage(formatMessage(answer), Pos.CENTER_LEFT, Color.LIGHTGREEN);
-                            MongoDBConnection.storeConversation("Fatima-azzahra", message, answer); // Replace "username" with the actual username
+                            MongoDBConnection.storeConversation("Fatima-azzahra", message, answer, chatHistoryList.getSelectionModel().getSelectedItem()); // Store with chat name
                         });
                     } catch (Exception e) {
                         Platform.runLater(() -> addMessage(formatMessage(response), Pos.CENTER_LEFT, Color.LIGHTGREEN));
@@ -100,21 +109,48 @@ public class DashboardController {
         AnimationUtil.fadeIn(hbox);
     }
 
-private String formatMessage(String message) {
-    String[] words = message.split(" ");
-    StringBuilder formattedMessage = new StringBuilder();
-    int lineLength = 0;
-    int maxLineLength = 80;
-    for (String word : words) {
-        if (lineLength + word.length() + 1 > maxLineLength) {
-            formattedMessage.append("\n");
-            lineLength = 0;
+    private String formatMessage(String message) {
+        String[] words = message.split(" ");
+        StringBuilder formattedMessage = new StringBuilder();
+        int lineLength = 0;
+        int maxLineLength = 80;
+        for (String word : words) {
+            if (lineLength + word.length() + 1 > maxLineLength) {
+                formattedMessage.append("\n");
+                lineLength = 0;
+            }
+            formattedMessage.append(word).append(" ");
+            lineLength += word.length() + 1;
         }
-        formattedMessage.append(word).append(" ");
-        lineLength += word.length() + 1;
+        return formattedMessage.toString().trim();
     }
-    return formattedMessage.toString().trim();
-}
+
+    @FXML
+    private void loadChatHistory() {
+        // Load chat history from the database
+        List<Document> conversations = MongoDBConnection.getConversations("Fatima-azzahra"); // Replace with actual username
+        for (Document conversation : conversations) {
+            String chatName = conversation.getString("chatName");
+            if (chatName != null && !chatHistory.contains(chatName)) {
+                chatHistory.add(chatName);
+            }
+        }
+    }
+
+    @FXML
+    private void loadChat(String chatName) {
+        // Load messages for the selected chat
+        messages.clear();
+        List<Document> conversations = MongoDBConnection.getConversations("Fatima-azzahra"); // Replace with actual username
+        for (Document conversation : conversations) {
+            if (chatName.equals(conversation.getString("chatName"))) {
+                String message = conversation.getString("message");
+                String response = conversation.getString("response");
+                addMessage("You: " + message, Pos.CENTER_RIGHT, Color.LIGHTBLUE);
+                addMessage("AI: " + response, Pos.CENTER_LEFT, Color.LIGHTGREEN);
+            }
+        }
+    }
 
     @FXML
     private void handleClose() {
