@@ -1,5 +1,7 @@
 package com.example.demo1;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,6 +15,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import org.bson.Document;
 import org.json.JSONObject;
 
@@ -45,7 +48,7 @@ public class DashboardController {
             }
         });
 
-        addMessage("Hello, je suis ici pour vous aider à savoir toutes les informations necessaires concernant ENSET \uD83C\uDF93 .", Pos.CENTER_LEFT, Color.LIGHTGREEN);
+        addMessage("Hello, je suis ici pour vous aider à savoir toutes les informations necessaires concernant ENSET \uD83C\uDF93 .", Pos.CENTER_LEFT, Color.LIGHTGREEN, false);
 
         messageInput.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
@@ -70,7 +73,7 @@ public class DashboardController {
     private void sendMessage() {
         String message = messageInput.getText().trim();
         if (!message.isEmpty()) {
-            addMessage(message, Pos.CENTER_RIGHT, Color.LIGHTBLUE);
+            addMessage(message, Pos.CENTER_RIGHT, Color.LIGHTBLUE, true); // User message
 
             // Immediately add the user message and clear the input
             messageInput.clear();
@@ -83,27 +86,26 @@ public class DashboardController {
                         JSONObject jsonResponse = new JSONObject(response);
                         String answer = jsonResponse.getString("answer");
                         Platform.runLater(() -> {
-                            addMessage(formatMessage(answer), Pos.CENTER_LEFT, Color.LIGHTGREEN);
-                            MongoDBConnection.storeConversation( message, answer, chatHistoryList.getSelectionModel().getSelectedItem()); // Store with chat name
+                            addMessage(answer, Pos.CENTER_LEFT, Color.LIGHTGREEN, false); // AI response
+                            MongoDBConnection.storeConversation(message, answer, chatHistoryList.getSelectionModel().getSelectedItem()); // Store with chat name
                         });
                     } catch (Exception e) {
-                        Platform.runLater(() -> addMessage(formatMessage(response), Pos.CENTER_LEFT, Color.LIGHTGREEN));
+                        Platform.runLater(() -> addMessage(response, Pos.CENTER_LEFT, Color.LIGHTGREEN, false)); // AI response
                     }
                 } else {
-                    Platform.runLater(() -> addMessage(formatMessage("Sorry, I couldn't understand your question."), Pos.CENTER_LEFT, Color.LIGHTGREEN));
+                    Platform.runLater(() -> addMessage("Sorry, I couldn't understand your question.", Pos.CENTER_LEFT, Color.LIGHTGREEN, false)); // AI response
                 }
             }).start();
         }
     }
 
-    private void addMessage(String message, Pos alignment, Color color) {
-        Text text = new Text(message);
-        text.wrappingWidthProperty().bind(messagesView.widthProperty().subtract(10)); // Further decrease padding value
-
+    private void addMessage(String message, Pos alignment, Color color, boolean isUserMessage) {
+        Text text = new Text(message); // Initialize with the full message
         HBox hbox = new HBox(text);
         hbox.setAlignment(alignment);
         hbox.setStyle("-fx-padding: 10; -fx-background-radius: 10;");
 
+        // Set background color based on alignment
         if (alignment == Pos.CENTER_RIGHT) {
             hbox.setStyle("-fx-background-color: lightblue; -fx-padding: 10; -fx-background-radius: 10;");
         } else {
@@ -111,14 +113,52 @@ public class DashboardController {
         }
 
         messages.add(hbox);
-        AnimationUtil.fadeIn(hbox);
+
+        if (!isUserMessage) {
+            animateMessageWordByWord(message, text);
+        }
     }
-    private String formatMessage(String message) {
+    private void addMessage1(String message, Pos alignment, Color color, boolean isUserMessage) {
+        Text text = new Text(formatMessage(message.split(" "), message.split(" ").length)); // Initialize with the formatted message
+        HBox hbox = new HBox(text);
+        hbox.setAlignment(alignment);
+        hbox.setStyle("-fx-padding: 10; -fx-background-radius: 10;");
+
+        // Set background color based on alignment
+        if (alignment == Pos.CENTER_RIGHT) {
+            hbox.setStyle("-fx-background-color: lightblue; -fx-padding: 10; -fx-background-radius: 10;");
+        } else {
+            hbox.setStyle("-fx-background-color: lightgreen; -fx-padding: 10; -fx-background-radius: 10;");
+        }
+
+        messages.add(hbox);
+    }
+
+    private void animateMessageWordByWord(String message, Text text) {
         String[] words = message.split(" ");
+        Timeline timeline = new Timeline();
+
+        // Create a KeyFrame for each word in the message
+        for (int i = 0; i < words.length; i++) {
+            final int index = i;
+            KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.1 * index), event -> {
+                text.setText(formatMessage(words, index + 1)); // Ensure the full message is displayed
+            });
+            timeline.getKeyFrames().add(keyFrame);
+        }
+
+        // Start the animation
+        timeline.play();
+    }
+
+    private String formatMessage(String[] words, int maxWords) {
         StringBuilder formattedMessage = new StringBuilder();
         int lineLength = 0;
-        int maxLineLength = 80;
-        for (String word : words) {
+        int maxLineLength = 80;  // maximum characters per line
+
+        // Construct the message line by line with wrapping
+        for (int i = 0; i < maxWords; i++) {
+            String word = words[i];
             if (lineLength + word.length() + 1 > maxLineLength) {
                 formattedMessage.append("\n");
                 lineLength = 0;
@@ -126,6 +166,7 @@ public class DashboardController {
             formattedMessage.append(word).append(" ");
             lineLength += word.length() + 1;
         }
+
         return formattedMessage.toString().trim();
     }
 
@@ -150,8 +191,8 @@ public class DashboardController {
             if (chatName.equals(conversation.getString("chatName"))) {
                 String message = conversation.getString("message");
                 String response = conversation.getString("response");
-                addMessage("You: " + message, Pos.CENTER_RIGHT, Color.LIGHTBLUE);
-                addMessage("AI: " + response, Pos.CENTER_LEFT, Color.LIGHTGREEN);
+                addMessage1("You: " + message, Pos.CENTER_RIGHT, Color.LIGHTBLUE, true);
+                addMessage1("AI: " + response, Pos.CENTER_LEFT, Color.LIGHTGREEN, false);
             }
         }
     }
@@ -173,7 +214,8 @@ public class DashboardController {
     @FXML
     private void handleContactSupport() {
         System.out.println("Contact support...");
-}
+    }
+
     public void uploadphoto(ActionEvent actionEvent) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Select a photo");
