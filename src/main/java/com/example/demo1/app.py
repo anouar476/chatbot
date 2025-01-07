@@ -185,14 +185,16 @@ class PDFQASystem:
                 }
             
             prompt = (
-                "Tu es un assistant spécialisé pour ENSET Mohammedia. "
-                "Réponds aux questions en te basant sur le contexte fourni. "
-                "Si le contexte ne permet pas de répondre précisément, indique-le clairement. "
-                "Sois précis, professionnel et utile. , et repondre par la language utilise dans la reponce \n\n"
-                f"Contexte:\n{context_text}\n\n"
-                f"Question: {question}\n\n"
-                "Réponse:"
-            )
+                "Tu es un assistant virtuel expert, spécialisé dans les questions relatives à l'ENSET Mohammedia. "
+                "Ton rôle est de fournir des réponses précises, concises et utiles, en te basant exclusivement sur les informations "
+                "contenues dans le contexte fourni. Si tu n'es pas en mesure de répondre de manière précise en raison d'un manque de contexte, "
+                "indique-le clairement et de façon respectueuse. Assure-toi de répondre avec le plus grand professionnalisme, en utilisant "
+                "un langage clair, courtois, et adapté à la situation.\n\n"
+                f"Contexte pertinent:\n{context_text}\n\n"
+                f"Question posée: {question}\n\n"
+                "Réponse :"
+)
+
 
             response = openai.ChatCompletion.create(
                 model="gpt-4",
@@ -252,7 +254,7 @@ def ask():
 
 if __name__ == '__main__':
     
-    pdf_paths = ["data/depa.pdf", "data/td.pdf", "data/1.pdf", "data/2.pdf", "data/3.pdf", "data/4.pdf", "data/5.pdf", "data/6.pdf", "data/listetu.pdf"]
+    pdf_paths = ["data/depa.pdf",  "data/2.pdf", "data/3.pdf",  "data/5.pdf", "data/6.pdf","data/7.pdf", "data/listetu.pdf"]
     openai_api_key = os.getenv("OPENAI_API_KEY")  
     app.qa_system = PDFQASystem(pdf_paths, openai_api_key)
     app.run(debug=True)
