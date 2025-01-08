@@ -23,4 +23,8 @@ module com.example.demo {
     requires org.json;
     opens com.example.demo1 to javafx.fxml;
     exports com.example.demo1;
+    exports com.example.demo1.DataBaseConnection;
+    opens com.example.demo1.DataBaseConnection to javafx.fxml;
+    exports com.example.demo1.Chat;
+    opens com.example.demo1.Chat to javafx.fxml;
 }

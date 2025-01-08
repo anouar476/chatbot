@@ -1,5 +1,7 @@
 package com.example.demo1;
 
+import com.example.demo1.Chat.ChatbotClient;
+import com.example.demo1.DataBaseConnection.MongoDBConnection;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -7,7 +9,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
@@ -15,12 +21,14 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.bson.Document;
 import org.json.JSONObject;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class DashboardController {
@@ -232,4 +240,26 @@ public class DashboardController {
             JOptionPane.showMessageDialog(null, "Selected file: " + selectedFile.getName());
         }
     }
+
+    public void openSettings(ActionEvent actionEvent) {
+    }
+
+        @FXML
+private void logout(ActionEvent actionEvent) {
+    // Close the current window
+    ((Stage) ((Node) actionEvent.getSource()).getScene().getWindow()).close();
+
+    // Load the login page
+    try {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/demo1/login.fxml"));
+        Parent root = fxmlLoader.load();
+        Stage stage = new Stage();
+        stage.setTitle("Login");
+        stage.setScene(new Scene(root));
+        stage.show();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
 }
+
+    }
