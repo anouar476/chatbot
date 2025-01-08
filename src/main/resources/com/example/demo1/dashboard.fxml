@@ -7,7 +7,17 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <BorderPane fx:id="root1" maxHeight="700" maxWidth="1300" minHeight="700" minWidth="1300" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo1.DashboardController">
+    <top>
+        <HBox styleClass="top-bar">
+            <ImageView fitHeight="60.0" fitWidth="60.0" preserveRatio="true">
+                <Image url="@logo.png" />
+            </ImageView>            <HBox HBox.hgrow="ALWAYS" />
+            <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#logout" styleClass="logout-button" text="Logout" />
+        </HBox>
+    </top>
     <left>
         <VBox fx:id="leftSidebar" minWidth="250" spacing="10" styleClass="sidebar">
             <Button fx:id="newChatButton" mnemonicParsing="false" onAction="#startNewChat" styleClass="new-chat-button" text="New Chat" />

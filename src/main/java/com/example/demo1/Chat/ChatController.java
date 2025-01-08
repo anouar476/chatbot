@@ -1,4 +1,4 @@
-package com.example.demo1;
+package com.example.demo1.Chat;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -97,7 +97,7 @@ public class ChatController {
                         JSONObject jsonResponse = new JSONObject(responseBody);
                         String aiMessage = jsonResponse.getString("answer");
 
-                        Platform.runLater(() -> addMessage("AI: " + formatMessage(aiMessage), Pos.CENTER_LEFT, Color.LIGHTGREEN));
+                        Platform.runLater(() -> addMessage("\uD83E\uDD16: " + formatMessage(aiMessage), Pos.CENTER_LEFT, Color.LIGHTGREEN));
 
                     } catch (Exception e) {
                         Platform.runLater(() -> showAlert("Error parsing the response: " + e.getMessage()));

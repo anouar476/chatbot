@@ -451,3 +451,25 @@
 .send-button:hover {
     -fx-background-color: #4c70ba;
 }
+.top-bar {
+    -fx-background-color: white;
+    -fx-padding: 15;
+    -fx-alignment: center-left;
+}
+
+.logout-button {
+    -fx-background-color: red;
+    -fx-text-fill: white;
+    -fx-padding: 9 17;
+    -fx-font-style: bold;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.logout-button:hover, .settings-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.logout-button:pressed, .settings-button:pressed {
+    -fx-background-color: #1f618d;
+}

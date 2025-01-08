@@ -1,4 +1,4 @@
-package com.example.demo1;
+package com.example.demo1.Chat;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
