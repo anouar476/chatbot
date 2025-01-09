@@ -24,7 +24,6 @@ public class ChatbotClient {
                 byte[] input = jsonInput.getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
             }
-
             int status = connection.getResponseCode();
             if (status == HttpURLConnection.HTTP_OK) {
                 Scanner scanner = new Scanner(connection.getInputStream(), StandardCharsets.UTF_8);
@@ -39,7 +38,6 @@ public class ChatbotClient {
             return "Error: Could not connect to the server.";
         }
     }
-
     public static void main(String[] args) {
         String question = "resume the pdf ?";
         String response = sendQuestion(question);
